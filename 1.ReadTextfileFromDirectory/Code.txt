@@ -1,0 +1,44 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.IO;
+Steps-add a file txt with name test parallel to assets folder if testing in editor
+      add a file txt with name test into application folder if testing for build      
+
+
+
+using UnityEngine.UI;
+
+
+public class ReadTestExternally : MonoBehaviour {
+
+   public  Text txt;
+
+	// Use this for initialization
+	void Start () {
+        readTextFile("test.txt");
+
+    }
+
+    void readTextFile(string file_path)
+    {
+
+
+        StreamReader inp_stm = new StreamReader(file_path);
+        while (!inp_stm.EndOfStream)
+        {
+            string inp_ln = inp_stm.ReadLine();
+            // Do Something with the input. 
+            print("My Data=" + inp_ln);
+            txt.text = inp_ln;
+        }
+
+        inp_stm.Close();
+    }
+
+
+    // Update is called once per frame
+    void Update () {
+		
+	}
+}
