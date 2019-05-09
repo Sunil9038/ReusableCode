@@ -41,7 +41,7 @@ private static string getPath()
         return Application.dataPath + "/StreamingAssets/csvfiles/";
         
      #elif UNITY_ANDROID
-		return Application.persistentDataPath + "/StreamingAssets/csvfiles/";
+		return "jar:file://" + Application.dataPath + "!/assets/csvfiles/";
        #elif UNITY_IPHONE
 		return GetiPhoneDocumentsPath();// +"/"+fileName;
         #else
@@ -53,7 +53,51 @@ private static string getPath()
 
 
 Implemention Of Above Code
+// Code to read Text
+    IEnumerator Start() {
+        for (int i = 0; i < Menu.iconSel.Count; i++)
+        {
+            fileName = getPath() + Menu.iconSel[i] + ".csv";
+            if (fileName.Contains("://"))
+            {  //For Android 
+                WWW www = new WWW(fileName);
+                yield return www;
+                fileData = www.text;
+            }
+            else
+            {
+                fileData = System.IO.File.ReadAllText(fileName);//For Window
+            }
+            lines = fileData.Split("\n"[0]);
+            ParseString(lines);
+        }
+    }
+    
+    //Code to read Image
+    
+    IEnumerator LoadIcon()
+    {
+      string  filePath= System.IO.Path.Combine(Application.streamingAssetsPath + "/IconImages", imgName + ".png");
+       
+        if (filePath.Contains("://"))
+        {  //For Android 
+            WWW www = new WWW(filePath);
+            yield return www;
+            Sprite sprite = Sprite.Create(www.texture, new Rect(0.0f, 0.0f, www.texture.width, www.texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+            img.sprite = sprite;
+        }
+        else
+        {
+            byte[] imgData = File.ReadAllBytes(filePath);
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(imgData); //..this will auto-resize the texture dimensions.
+            Sprite sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100.0f);
+            img.sprite = sprite;
+        }
+    
 
+
+}
 
 
 
